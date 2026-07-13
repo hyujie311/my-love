@@ -604,28 +604,15 @@
     function insertEmoji() { document.getElementById('userInput').value += "🥺"; }
     
     function enterChat() { 
-    // 给个简单的弹窗测试是否触发了点击
-    // alert("准备进入"); 
-
-    try {
-        applyTimeThemeAndStatus(); 
-        updateLoveCalculations();
-
-        var homeScreen = document.getElementById('homeScreen');
-        if(homeScreen) {
-            homeScreen.style.opacity = '0'; 
-            homeScreen.style.pointerEvents = 'none'; 
-        }
-
-        if (typeof chatHistory !== 'undefined' && chatHistory.length > 1) {
-            parseAndSetStatus(chatHistory[chatHistory.length - 1].content); 
-        }
-
-        switchTab('chat'); 
-    } catch (e) {
-        console.error("进入空间报错了：", e);
-        alert("出错了，请检查浏览器控制台");
+    // 直接操作样式，跳过所有可能出错的逻辑检查
+    var homeScreen = document.getElementById('homeScreen');
+    if (homeScreen) {
+        homeScreen.style.opacity = '0'; 
+        homeScreen.style.pointerEvents = 'none'; 
     }
+    
+    // 强制切换界面
+    switchTab('chat'); 
 }
     
     function exitChat() { 
