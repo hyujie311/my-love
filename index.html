@@ -409,7 +409,11 @@
             }
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', msg.role === 'user' ? 'user' : 'bot');
-            msgDiv.innerText = msg.content.replace(/\[状态:.*?\]/g, '').trim();
+            // 修改为使用 innerHTML 以支持斜体标签
+msgDiv.innerHTML = msg.content
+    .replace(/\[状态:.*?\]/g, '') // 删掉状态标签
+    .replace(/\*\((.*?)\)\*/g, '<i>($1)</i>') // 识别 *(动作)* 并转为斜体
+    .trim();
             chatBox.appendChild(msgDiv);
             if (i === chatHistory.length - 1 && msg.role === 'assistant') parseAndSetStatus(msg.content);
         }
