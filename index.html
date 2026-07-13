@@ -5,22 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>慢慢喜欢你</title>
     <style>
-        :root {
-            --bg-color: #F8F5F2;
-            --bot-bubble: #FFFFFF;
-            --user-bubble: #F4D7C7;
-            --text-main: #4A3E3D;
-            --text-muted: #8A7E7C;
-            --heart-color: #E66767;
-            --header-bg: rgba(248, 245, 242, 0.95);
-            --border-color: rgba(217, 210, 203, 0.4);
-            --nav-bg: #FFFFFF;
-        }
+       :root{
+    /* ===== 通用变量 ===== */
+    --bg-color:#F8F6F4;
 
-        body.theme-morning { --bg-color: #FFF5F5; --bot-bubble: #FFFFFF; --user-bubble: #FAAAA6; --text-main: #5C4343; --header-bg: rgba(255, 245, 245, 0.95); }
-        body.theme-noon { --bg-color: #F3F7F4; --bot-bubble: #FFFFFF; --user-bubble: #8FA89B; --text-main: #38423B; --header-bg: rgba(243, 247, 244, 0.95); }
-        body.theme-evening { --bg-color: #FFF3EA; --bot-bubble: #FFFFFF; --user-bubble: #EAA07A; --text-main: #543E32; --header-bg: rgba(255, 243, 234, 0.95); }
-        body.theme-night { --bg-color: #1A1E29; --bot-bubble: #252B3A; --user-bubble: #CD5C5C; --text-main: #E2E6EE; --text-muted: #7E8696; --header-bg: rgba(26, 30, 41, 0.95); --border-color: rgba(255, 255, 255, 0.1); --nav-bg: #202634; }
+    --bot-bubble:#FFFFFF;
+    --user-bubble:#F3C3BB;
+
+    --text-main:#3C3533;
+    --text-muted:#8D8B92;
+
+    --heart-color:#EF7280;
+
+    --header-bg:rgba(255,255,255,.70);
+
+    --border-color:rgba(0,0,0,.05);
+
+    --nav-bg:rgba(255,255,255,.72);
+
+    --shadow:0 10px 35px rgba(0,0,0,.06);
+}
+
+
+
+/* ========= Morning ========= */
+
+body.theme-morning{
+
+    --bg-color:#FFF8F7;
+
+    --bot-bubble:#FFFFFF;
+
+    --user-bubble:#F7B6AF;
+
+    --text-main:#514643;
+
+    --text-muted:#9A8E8A;
+
+    --header-bg:rgba(255,255,255,.75);
+
+}
+
+
+
+/* ========= Noon ========= */
+
+body.theme-noon{
+
+    --bg-color:#F5F8F4;
+
+    --bot-bubble:#FFFFFF;
+
+    --user-bubble:#9EB9AD;
+
+    --text-main:#38443C;
+
+    --text-muted:#809087;
+
+    --header-bg:rgba(255,255,255,.72);
+
+}
+
+
+
+/* ========= Evening ========= */
+
+body.theme-evening{
+
+    --bg-color:#FFF5EE;
+
+    --bot-bubble:#FFFFFF;
+
+    --user-bubble:#DFA184;
+
+    --text-main:#4D4037;
+
+    --text-muted:#8E8078;
+
+    --header-bg:rgba(255,255,255,.72);
+
+}
+
+
+
+/* ========= Night ========= */
+
+body.theme-night{
+
+    --bg-color:#0F172A;
+
+    --bot-bubble:#1E293B;
+
+    --user-bubble:#D88484;
+
+    --text-main:#F4F7FB;
+
+    --text-muted:#94A3B8;
+
+    --header-bg:rgba(15,23,42,.72);
+
+    --border-color:rgba(255,255,255,.08);
+
+    --nav-bg:rgba(15,23,42,.78);
+
+    --shadow:0 15px 45px rgba(0,0,0,.45);
+
+}
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #EAE5E0; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: var(--text-main); transition: background 0.5s ease; }
