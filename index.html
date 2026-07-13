@@ -604,13 +604,29 @@
     function insertEmoji() { document.getElementById('userInput').value += "🥺"; }
     
     function enterChat() { 
+    // 给个简单的弹窗测试是否触发了点击
+    // alert("准备进入"); 
+
+    try {
         applyTimeThemeAndStatus(); 
         updateLoveCalculations();
-        document.getElementById('homeScreen').style.opacity = '0'; 
-        document.getElementById('homeScreen').style.pointerEvents = 'none'; 
-        if (chatHistory.length > 1) parseAndSetStatus(chatHistory[chatHistory.length - 1].content); 
+
+        var homeScreen = document.getElementById('homeScreen');
+        if(homeScreen) {
+            homeScreen.style.opacity = '0'; 
+            homeScreen.style.pointerEvents = 'none'; 
+        }
+
+        if (typeof chatHistory !== 'undefined' && chatHistory.length > 1) {
+            parseAndSetStatus(chatHistory[chatHistory.length - 1].content); 
+        }
+
         switchTab('chat'); 
+    } catch (e) {
+        console.error("进入空间报错了：", e);
+        alert("出错了，请检查浏览器控制台");
     }
+}
     
     function exitChat() { 
         generateLinkedGreeting(); 
