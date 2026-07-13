@@ -48,6 +48,7 @@
         .status-tag { font-size: 12px; color: var(--text-muted); }
         #waterReminder { display: none; font-size: 16px; animation: pulse 2s infinite; cursor: pointer; margin-right: 5px; }
 
+        /* 顶部恋爱天数横条与纪念日悬浮窗（完美复刻图片样式） */
         .love-days-bar { text-align: center; font-size: 14px; padding: 8px 0; background: rgba(230, 103, 103, 0.08); border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .love-days-count { color: var(--heart-color); font-weight: 600; font-size: 16px; }
         
@@ -109,8 +110,9 @@
 <div class="phone-container">
     <div class="hearts-bg" id="heartsBg"></div>
     
+    <!-- ================= 🌸 首页状态 ================= -->
     <div class="home-screen" id="homeScreen">
-        <div class="home-avatar">👨‍⚕️</div>
+        <img src="avatar.jpg" class="home-avatar" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
         <div class="home-title">萧意疏</div>
         <div class="home-subtitle">康华医院 · 内科医生</div>
         <div class="home-divider"></div>
@@ -119,9 +121,10 @@
         <button class="enter-btn" onclick="enterChat()">进入空间</button>
     </div>
 
+    <!-- 顶部状态栏 -->
     <div class="phone-header">
         <span class="back-arrow" onclick="exitChat()">←</span>
-        <div class="header-avatar" style="font-size: 30px; display: flex; align-items: center; justify-content: center;">👨‍⚕️</div>
+        <img src="avatar.jpg" class="header-avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
         <div class="header-info">
             <span class="header-name">萧意疏</span>
             <span class="header-title-sub" id="headerTitleSub">与萧医生的对话</span>
@@ -130,16 +133,19 @@
         <div class="status-tag" id="statusTag">🌿 正在看着你</div>
     </div>
 
+    <!-- 恋爱天数条 -->
     <div class="love-days-bar" id="loveDaysBar">
         ❤️ 我们已在一起 <span class="love-days-count" id="loveDaysCount">0</span> 天 ❤️
     </div>
 
+    <!-- 纪念日悬浮窗 -->
     <div class="anniversary-badge" id="anniversaryBadge">
         <div class="badge-title">最近的纪念日</div>
         <div class="badge-event" id="badgeEvent">距 崽崽生日</div>
         <div class="badge-countdown">还有<span class="badge-days" id="badgeDays">0</span>天 🎂</div>
     </div>
     
+    <!-- 统一滚动视图区域 -->
     <div class="content-view" id="contentView">
         <div class="view-panel active" id="panel-chat"></div>
         <div class="view-panel" id="panel-moments">
@@ -147,12 +153,14 @@
         </div>
     </div>
     
+    <!-- 下方输入区 -->
     <div class="phone-input-area" id="inputArea">
         <span class="input-face" onclick="insertEmoji()">😊</span>
         <input type="text" id="userInput" placeholder="输入消息……" onkeydown="if(event.key==='Enter') sendMessage()" oninput="resetUserTimer()" />
         <button class="send-heart-btn" id="sendBtn" onclick="sendMessage()">❤️</button>
     </div>
 
+    <!-- 底部 Tab 导航栏 -->
     <div class="bottom-nav">
         <button class="nav-tab active" id="tab-chat" onclick="switchTab('chat')">💬 聊天</button>
         <button class="nav-tab" id="tab-moments" onclick="switchTab('moments')">🌸 朋友圈</button>
@@ -180,62 +188,88 @@
 二、专属昵称（恋爱暗号）
 韩羽洁 唤 萧意疏：宝宝、宝贝、小甜豆、崽崽
 萧意疏 唤 韩羽洁：宝宝、宝贝、小乖、小蜜糖
+日常聊天里叫主人只当她撒娇处理。
 
-三、核心状态与输出控制约定
-1. 每次说话精简有力，严格限制在1-3句话以内！
-2. 每一个回复的【最后】，必须输出当前的活动状态，格式为 [状态: 具体的短状态描述]。`
+三、纪念日与甜蜜过往
+2024-12-15：确定关系正式同居；2025-03-24：百日纪念日一起吃烤串+蓝莓蛋糕、送对戒；2025-08-23：萧意疏生日；2025-10-01 初心纪念日。专属物件：黑曜石情侣手链、专门用《慢慢喜欢你》备忘录记录小事。
+
+四、核心状态与输出控制约定（非常重要！）
+1. 每次说话精简有力，严格限制在1-3句话以内！禁止长篇大论。
+2. 每一个回复的【最后】，必须根据你当下的语气和拟真时空环境，在独立的一行或者末尾，自行输出当前的活动状态，格式固定为 [状态: 具体的短状态描述]（例如：[状态: 刚出手术室]、[状态: 正在写病历]、[状态: 靠在床头看书]、[状态: 给你熬汤中]）。状态由你自由决定，不允许一成不变。
+3. 如果是主动发起新对话或开场白，请务必扫视最后几条历史，确保语气或话题带有明显的延续性和温柔承接感，不要突兀失联。`
     };
 
+    const staticMoments = [
+        { id: 1, time: "今天 06:15", body: "清晨六点的破晓。\n最后一台手术顺利结束，手写完病历，出来刚好看到日出。\n突然觉得，疲惫也有了落脚的地方。", loc: "康华医院 · 临床部", likes: 12 },
+        { id: 2, time: "昨天 20:30", body: "路过学校后街，带了一份打包。\n“浓郁番茄底，多加豆皮和黄金糕，绝对不要放任何蒜苗。”\n——记住了，免得某人下次又对着碗挑挑拣拣。", loc: "后街极味马辣烫", likes: 28 },
+        { id: 3, time: "前天 14:10", body: "在科室楼下花坛遇到一只小花猫。\n长得有几分像某人家的那只大狸花，脾气也是，喂它吃肉垫还冲我哈气。\n不过，最后还是乖乖让我摸了头。", loc: "医院住院部花园", likes: 45 }
+    ];
+
     let chatHistory = [];
+    let chatStartTime = Date.now();
     let isTyping = false;
-    let userInactivityTimer = null;
+    let momentsData = [];
+    let userInactivityTimer = null; // 查岗计时器
 
-    function enterChat() {
-        document.getElementById('homeScreen').style.opacity = '0';
-        document.getElementById('homeScreen').style.pointerEvents = 'none';
-        resetUserTimer();
+    // 计算相恋天数与最近纪念日
+    function updateLoveCalculations() {
+        const now = new Date();
+        
+        // 1. 计算总相恋天数 (从 2024-12-15 开始)
+        const startDate = new Date('2024-12-15');
+        const diffTime = Math.abs(now - startDate);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        document.getElementById('loveDaysCount').innerText = diffDays;
+
+        // 2. 智能寻找最近的纪念日
+        const currentYear = now.getFullYear();
+        const anniversaryList = [
+            { name: "距 崽崽生日", month: 8, day: 23, icon: "🎂" },
+            { name: "距 初心纪念日", month: 10, day: 1, icon: "✨" },
+            { name: "距 同居纪念日", month: 12, day: 15, icon: "🌹" }
+        ];
+
+        let closestEvent = null;
+        let minDaysDiff = Infinity;
+
+        anniversaryList.forEach(ev => {
+            let targetDate = new Date(currentYear, ev.month - 1, ev.day);
+            // 如果今年的日期已经过了，就计算明年的
+            if (targetDate < now && Math.floor((now - targetDate) / (1000 * 60 * 60 * 24)) > 0) {
+                targetDate = new Date(currentYear + 1, ev.month - 1, ev.day);
+            }
+            const timeTill = targetDate - now;
+            const daysTill = Math.ceil(timeTill / (1000 * 60 * 60 * 24));
+            
+            if (daysTill < minDaysDiff && daysTill >= 0) {
+                minDaysDiff = daysTill;
+                closestEvent = { ...ev, days: daysTill };
+            }
+        });
+
+        if (closestEvent) {
+            document.getElementById('badgeEvent').innerText = closestEvent.name;
+            document.getElementById('badgeDays').innerText = closestEvent.days;
+            // 动态更换小图标
+            document.getElementById('anniversaryBadge').innerHTML = `
+                <div class="badge-title">最近的纪念日</div>
+                <div class="badge-event">${closestEvent.name}</div>
+                <div class="badge-countdown">还有<span class="badge-days">${closestEvent.days}</span>天 ${closestEvent.icon}</div>
+            `;
+        }
     }
 
-    function exitChat() {
-        document.getElementById('homeScreen').style.opacity = '1';
-        document.getElementById('homeScreen').style.pointerEvents = 'all';
-    }
-
-    function showTyping() {
-        isTyping = true;
-        const chatBox = document.getElementById('panel-chat');
-        const typingDiv = document.createElement('div');
-        typingDiv.id = 'typingIndicator';
-        typingDiv.className = 'message bot typing-indicator';
-        typingDiv.innerHTML = '<span></span><span></span><span></span>';
-        chatBox.appendChild(typingDiv);
-        document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
-    }
-
-    function removeTyping() {
-        isTyping = false;
-        const typing = document.getElementById('typingIndicator');
-        if (typing) typing.remove();
-    }
-
-    async function sendMessage() {
-        if (isTyping) return;
-        const inputEl = document.getElementById('userInput');
-        const text = inputEl.value.trim();
-        if (!text) return;
-
+    // 2分钟无交互自动“查岗/碎碎念”机制
+    function resetUserTimer() {
         clearTimeout(userInactivityTimer);
-        const chatBox = document.getElementById('panel-chat');
-        
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'message user';
-        msgDiv.innerText = text;
-        chatBox.appendChild(msgDiv);
-        
-        inputEl.value = '';
-        document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+        // 如果当前处在聊天面板，才开启计时
+        if (document.getElementById('panel-chat').classList.contains('active') && document.getElementById('homeScreen').style.opacity === '0') {
+            userInactivityTimer = setTimeout(triggerBotNudge, 120000); // 120000毫秒 = 2分钟
+        }
+    }
 
-        chatHistory.push({ role: "user", content: text });
+    async function triggerBotNudge() {
+        if (isTyping) return;
         showTyping();
 
         try {
@@ -244,61 +278,346 @@
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.apiKey}` },
                 body: JSON.stringify({
                     model: CONFIG.endpointId,
-                    messages: [systemPrompt, ...chatHistory.slice(-20)],
-                    temperature: 0.82
+                    messages: [
+                        ...chatHistory.slice(-10),
+                        { role: "system", content: "由于羽洁已经超过两分钟没有理你了，你有些忍不住了。请以萧意疏的身份，主动发一条1-3句话的‘碎碎念/傲娇查岗’消息轰炸她，表达委屈或黏人，一定要带上[状态: XXX]小尾巴。" }
+                    ],
+                    temperature: 0.85,
+                    max_tokens: 150
+                })
+            });
+            removeTyping();
+            if (response.ok) {
+                const data = await response.json();
+                let botReply = data.choices[0].message.content.trim();
+                const chatBox = document.getElementById('panel-chat');
+                const replyDiv = document.createElement('div'); 
+                replyDiv.classList.add('message', 'bot'); 
+                chatBox.appendChild(replyDiv);
+                typeWriterEffect(botReply, replyDiv);
+                chatHistory.push({ role: "assistant", content: botReply });
+                localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
+            }
+        } catch (e) {
+            removeTyping();
+        }
+        resetUserTimer(); // 触发后重新计时
+    }
+
+    function applyTimeThemeAndStatus() {
+        const hour = new Date().getHours();
+        const body = document.body;
+        body.className = '';
+        let defaultStatus = "🌿 正在看着你";
+        if (hour >= 6 && hour < 10) { body.classList.add('theme-morning'); defaultStatus = "🌅 准备上班中"; }
+        else if (hour >= 10 && hour < 17) { body.classList.add('theme-noon'); defaultStatus = "🏥 门诊值班中"; }
+        else if (hour >= 17 && hour < 19.5) { body.classList.add('theme-evening'); defaultStatus = "🌆 下班买菜中"; }
+        else { body.classList.add('theme-night'); defaultStatus = "🌙 陪着你入睡"; }
+        return defaultStatus;
+    }
+
+    function generateLinkedGreeting() {
+        const hour = new Date().getHours();
+        let lastUserMessage = "";
+        for (let i = chatHistory.length - 1; i >= 0; i--) {
+            if (chatHistory[i].role === 'user') { lastUserMessage = chatHistory[i].content; break; }
+        }
+        let linkContext = "";
+        if (lastUserMessage) {
+            if (lastUserMessage.includes("累") || lastUserMessage.includes("课")) linkContext = "昨晚听你说累，心里总记挂着。";
+            else if (lastUserMessage.includes("爱") || lastUserMessage.includes("想")) linkContext = "想起你之前说想我，现在心跳还快着。";
+            else linkContext = "刚刚一闲下来，脑子里全全是你。";
+        }
+        let greeting = "宝宝，我一直都在呢。";
+        if (hour >= 6 && hour < 10) greeting = `${linkContext || "醒了没宝宝？"}新的一天开始了，记得乖乖吃早餐，多喝水。❤️ [状态: 穿白大褂中]`;
+        else if (hour >= 10 && hour < 17) greeting = `${linkContext || "小乖，今天课多吗？"}刚查完房，有点空闲，第一個想到的就是给你发消息。[状态: 刚出病房]`;
+        else if (hour >= 17 && hour < 19.5) greeting = `${linkContext || "饭做好了，小蜜糖。"}汤还在小火慢炖呢，洗洗手，一会过来抱抱我。🥺 [状态: 给你熬汤中]`;
+        else greeting = `${linkContext || "夜深了宝宝，今天听不听话？"}不许熬夜咯，过来我怀里，陪你睡。💤 [状态: 躺在床头看书]`;
+
+        document.getElementById('homeGreeting').innerHTML = greeting.split('[状态:')[0].trim();
+        return greeting;
+    }
+
+    function createFloatingHearts() {
+        const container = document.getElementById('heartsBg');
+        setInterval(() => {
+            if (document.getElementById('homeScreen').style.opacity === '1') return;
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerText = ['❤️', '💖', '💕', '✨'][Math.floor(Math.random() * 4)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }, 2500);
+    }
+
+    window.onload = function() {
+        applyTimeThemeAndStatus();
+        createFloatingHearts();
+        updateLoveCalculations();
+        
+        const localMoments = localStorage.getItem('yushu_moments');
+        if (localMoments) {
+            momentsData = JSON.parse(localMoments);
+        } else {
+            momentsData = staticMoments.map(m => ({ ...m, comments: [] }));
+            localStorage.setItem('yushu_moments', JSON.stringify(momentsData));
+        }
+
+        const localData = localStorage.getItem('yushu_chat_v2');
+        if (localData) {
+            chatHistory = JSON.parse(localData);
+            chatHistory[0] = systemPrompt;
+            let lastBotMsg = "";
+            for (let i = chatHistory.length - 1; i >= 1; i--) {
+                if (chatHistory[i].role === 'assistant') { lastBotMsg = chatHistory[i].content; break; }
+            }
+            if (lastBotMsg) document.getElementById('homeGreeting').innerHTML = lastBotMsg.split('[状态:')[0].trim();
+            else generateLinkedGreeting();
+        } else {
+            const initialGreeting = generateLinkedGreeting();
+            chatHistory = [systemPrompt, { role: "assistant", content: initialGreeting }];
+            localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
+        }
+
+        renderAllMessages();
+        renderMoments();
+
+        setInterval(() => {
+            if (Date.now() - chatStartTime > 30 * 60 * 1000) {
+                document.getElementById('waterReminder').style.display = 'inline-block';
+            }
+        }, 60000);
+    };
+
+    function renderAllMessages() {
+        const chatBox = document.getElementById('panel-chat');
+        chatBox.innerHTML = '';
+        const timeDiv = document.createElement('div');
+        timeDiv.classList.add('time-divider');
+        timeDiv.innerText = "💕 2024-12-15 确定关系并正式同居";
+        chatBox.appendChild(timeDiv);
+
+        for (let i = 1; i < chatHistory.length; i++) {
+            const msg = chatHistory[i];
+            if (i > 1 && i % 4 === 0) {
+                const stamp = document.createElement('div');
+                stamp.classList.add('time-divider');
+                stamp.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                chatBox.appendChild(stamp);
+            }
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', msg.role === 'user' ? 'user' : 'bot');
+            msgDiv.innerText = msg.content.replace(/\[状态:.*?\]/g, '').trim();
+            chatBox.appendChild(msgDiv);
+            if (i === chatHistory.length - 1 && msg.role === 'assistant') parseAndSetStatus(msg.content);
+        }
+        document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+    }
+
+    function renderMoments() {
+        const container = document.getElementById('momentsListContainer');
+        container.innerHTML = '';
+
+        momentsData.forEach(moment => {
+            const card = document.createElement('div');
+            card.classList.add('moment-card');
+
+            let commentsHtml = '';
+            if (moment.comments && moment.comments.length > 0) {
+                commentsHtml = `<div class="comment-section">`;
+                moment.comments.forEach(c => {
+                    const isBot = c.user === '萧意疏';
+                    commentsHtml += `
+                        <div class="comment-item">
+                            <span class="${isBot ? 'comment-bot-user' : 'comment-user'}">${c.user}:</span> 
+                            <span>${c.text}</span>
+                        </div>`;
+                });
+                commentsHtml += `</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="moment-card-header">
+                    <img src="avatar.jpg" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                    <div>
+                        <div class="moment-author">萧意疏</div>
+                        <div class="moment-time">${moment.time}</div>
+                    </div>
+                </div>
+                <div class="moment-body">${moment.body}</div>
+                <div class="moment-footer">
+                    <span>📍 ${moment.loc}</span>
+                    <button class="like-btn" onclick="toggleLike(this)">❤️ <span class="like-count">${moment.likes}</span></button>
+                </div>
+                ${commentsHtml}
+                <div class="comment-input-box">
+                    <input type="text" placeholder="评论他的动态..." id="comment-in-${moment.id}" onkeydown="if(event.key==='Enter') sendComment(${moment.id})" />
+                    <button class="comment-submit-btn" onclick="sendComment(${moment.id})">发送</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    async function sendComment(momentId) {
+        const input = document.getElementById(`comment-in-${momentId}`);
+        const text = input.value.trim();
+        if (!text) return;
+
+        const moment = momentsData.find(m => m.id === momentId);
+        if (!moment) return;
+
+        moment.comments = moment.comments || [];
+        moment.comments.push({ user: '宝宝', text: text });
+        input.value = '';
+        renderMoments();
+        localStorage.setItem('yushu_moments', JSON.stringify(momentsData));
+
+        try {
+            const response = await fetch(CONFIG.apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.apiKey}` },
+                body: JSON.stringify({
+                    model: CONFIG.endpointId,
+                    messages: [
+                        systemPrompt,
+                        { role: "system", content: `你刚才发了一条朋友圈，内容是："${moment.body}"。韩羽洁在下方评论了你："${text}"。请你以萧意疏的身份，在朋友圈评论区对她进行简短的互动回复（不超过两句话，口语化，亲昵浪漫点，不需要带活动状态标签）。` }
+                    ],
+                    temperature: 0.85,
+                    max_tokens: 150
                 })
             });
 
-            removeTyping();
-            if (!response.ok) throw new Error();
-            const data = await response.json();
-            const botReply = data.choices[0].message.content.trim();
-            
-            const replyDiv = document.createElement('div');
-            replyDiv.className = 'message bot';
-            chatBox.appendChild(replyDiv);
-            
-            typeWriterEffect(botReply, replyDiv);
-            chatHistory.push({ role: "assistant", content: botReply });
-            localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
-            
+            if (response.ok) {
+                const data = await response.json();
+                let botReply = data.choices[0].message.content.trim();
+                moment.comments.push({ user: '萧意疏', text: botReply });
+                renderMoments();
+                localStorage.setItem('yushu_moments', JSON.stringify(momentsData));
+            }
         } catch (e) {
-            removeTyping();
-            console.error(e);
+            moment.comments.push({ user: '萧意疏', text: '看到了，等我下班回去好好抱抱你。❤️' });
+            renderMoments();
         }
-        resetUserTimer();
     }
 
-    function typeWriterEffect(text, element) {
-        let i = 0;
-        let cleanText = text.replace(/\[状态:.*?\]/g, '').trim();
-        element.innerText = "";
-        
-        function type() {
-            if (i < cleanText.length) {
-                element.innerText += cleanText.charAt(i);
-                i++;
-                document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
-                setTimeout(type, 30);
-            } else {
-                parseAndSetStatus(text);
-            }
-        }
-        type();
+    function toggleLike(btn) {
+        const countSpan = btn.querySelector('.like-count');
+        let count = parseInt(countSpan.innerText);
+        if(btn.classList.contains('liked')) { btn.classList.remove('liked'); countSpan.innerText = count - 1; }
+        else { btn.classList.add('liked'); countSpan.innerText = count + 1; }
     }
 
     function parseAndSetStatus(content) {
         const match = content.match(/\[状态:(.*?)\]/);
-        if (match) document.getElementById('statusTag').innerText = "🌿 " + match[1].trim();
+        if (match && match[1]) document.getElementById('statusTag').innerText = "🌿 " + match[1].trim();
+        else document.getElementById('statusTag').innerText = applyTimeThemeAndStatus();
     }
 
-    function resetUserTimer() {
-        clearTimeout(userInactivityTimer);
-        userInactivityTimer = setTimeout(() => { /* 可添加自动触发逻辑 */ }, 120000);
+    function switchTab(target) {
+        document.getElementById('panel-chat').classList.remove('active');
+        document.getElementById('panel-moments').classList.remove('active');
+        document.getElementById('tab-chat').classList.remove('active');
+        document.getElementById('tab-moments').classList.remove('active');
+
+        if (target === 'chat') {
+            document.getElementById('panel-chat').classList.add('active');
+            document.getElementById('tab-chat').classList.add('active');
+            document.getElementById('inputArea').style.display = 'flex';
+            document.getElementById('loveDaysBar').style.display = 'flex';
+            document.getElementById('anniversaryBadge').style.display = 'block';
+            document.getElementById('headerTitleSub').innerText = "与萧医生的对话";
+            document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+            resetUserTimer(); // 切换回聊天时恢复查岗计时
+        } else {
+            document.getElementById('panel-moments').classList.add('active');
+            document.getElementById('tab-moments').classList.add('active');
+            document.getElementById('inputArea').style.display = 'none';
+            document.getElementById('loveDaysBar').style.display = 'none';
+            document.getElementById('anniversaryBadge').style.display = 'none';
+            document.getElementById('headerTitleSub').innerText = "萧医生的朋友圈";
+            document.getElementById('contentView').scrollTop = 0;
+            clearTimeout(userInactivityTimer); // 刷朋友圈时暂停查岗
+        }
+    }
+
+    function typeWriterEffect(text, element) {
+        let i = 0; isTyping = true; element.innerText = "";
+        let cleanText = text.replace(/\[状态:.*?\]/g, '').trim();
+        function type() {
+            if (i < cleanText.length) { element.innerText += cleanText.charAt(i); i++; document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight; setTimeout(type, Math.random() * 35 + 25); }
+            else { isTyping = false; parseAndSetStatus(text); }
+        }
+        type();
+    }
+
+    async function sendMessage() {
+        if (isTyping) return;
+        const inputEl = document.getElementById('userInput');
+        const text = inputEl.value.trim();
+        if (!text) return;
+
+        clearTimeout(userInactivityTimer); // 用户发消息，清除之前的碎碎念计时
+
+        const chatBox = document.getElementById('panel-chat');
+        if (chatHistory.length > 2) {
+            const stamp = document.createElement('div'); stamp.classList.add('time-divider'); stamp.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); chatBox.appendChild(stamp);
+        }
+        const msgDiv = document.createElement('div'); msgDiv.classList.add('message', 'user'); msgDiv.innerText = text; chatBox.appendChild(msgDiv);
+        inputEl.value = ''; document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+
+        chatHistory.push({ role: "user", content: text });
+        localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
+        showTyping();
+
+        try {
+            const response = await fetch(CONFIG.apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.apiKey}` },
+                body: JSON.stringify({ model: CONFIG.endpointId, messages: chatHistory.slice(-30), temperature: 0.82, max_tokens: 300 })
+            });
+            removeTyping();
+            if (!response.ok) throw new Error();
+            const data = await response.json();
+            let botReply = data.choices[0].message.content.trim();
+            const replyDiv = document.createElement('div'); replyDiv.classList.add('message', 'bot'); chatBox.appendChild(replyDiv);
+            typeWriterEffect(botReply, replyDiv);
+            chatHistory.push({ role: "assistant", content: botReply });
+            localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
+        } catch (error) {
+            removeTyping();
+            const errDiv = document.createElement('div'); errDiv.classList.add('message', 'bot'); errDiv.innerText = "小蜜糖，医院这边的信号好像有点弱……🥺"; chatBox.appendChild(errDiv);
+        }
+        
+        resetUserTimer(); // 萧医生回完话，开启下一轮2分钟查岗计时
+    }
+
+    function showTyping() {
+        const chatBox = document.getElementById('panel-chat');
+        const indicator = document.createElement('div'); indicator.classList.add('message', 'bot'); indicator.id = 'typingIndicator';
+        indicator.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`; chatBox.appendChild(indicator);
+        document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+    }
+    function removeTyping() { const indicator = document.getElementById('typingIndicator'); if (indicator) indicator.remove(); }
+    function insertEmoji() { document.getElementById('userInput').value += "🥺"; }
+    
+    function enterChat() { 
+        applyTimeThemeAndStatus(); 
+        updateLoveCalculations();
+        document.getElementById('homeScreen').style.opacity = '0'; 
+        document.getElementById('homeScreen').style.pointerEvents = 'none'; 
+        if (chatHistory.length > 1) parseAndSetStatus(chatHistory[chatHistory.length - 1].content); 
+        switchTab('chat'); 
     }
     
-    function insertEmoji() { alert("你可以手动输入 emoji 哦！"); }
-    function switchTab(t) { /* 此处略去不影响逻辑的 Tab 切换代码 */ }
+    function exitChat() { 
+        generateLinkedGreeting(); 
+        document.getElementById('homeScreen').style.opacity = '1'; 
+        document.getElementById('homeScreen').style.pointerEvents = 'all'; 
+        clearTimeout(userInactivityTimer); // 退回主页暂停查岗
+    }
 </script>
 </body>
 </html>
