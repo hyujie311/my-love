@@ -548,14 +548,36 @@ msgDiv.innerHTML = msg.content
     }
 
     function typeWriterEffect(text, element) {
-        let i = 0; isTyping = true; element.innerText = "";
-        let cleanText = text.replace(/\[状态:.*?\]/g, '').trim();
-        function type() {
-            if (i < cleanText.length) { element.innerText += cleanText.charAt(i); i++; document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight; setTimeout(type, Math.random() * 35 + 25); }
-            else { isTyping = false; parseAndSetStatus(text); }
+    isTyping = true;
+    element.innerHTML = ""; // 必须用 innerHTML
+    
+    // 把状态删掉，并把 *(内容)* 替换成 <i>(内容)</i>
+    let processedText = text.replace(/\[状态:.*?\]/g, '')
+                            .replace(/\*\((.*?)\)\*/g, '<i>($1)</i>')
+                            .trim();
+    
+    let i = 0;
+    // 定义一个更智能的打字机函数
+    function type() {
+        if (i < processedText.length) {
+            // 如果遇到标签，直接跳过标签部分，不然打字机会乱掉
+            if (processedText.charAt(i) === '<') {
+                let tagEnd = processedText.indexOf('>', i);
+                element.innerHTML += processedText.substring(i, tagEnd + 1);
+                i = tagEnd + 1;
+            } else {
+                element.innerHTML += processedText.charAt(i);
+                i++;
+            }
+            document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+            setTimeout(type, 30); // 打字速度
+        } else {
+            isTyping = false;
+            parseAndSetStatus(text);
         }
-        type();
     }
+    type();
+}
 
     async function sendMessage() {
         if (isTyping) return;
