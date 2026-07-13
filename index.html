@@ -48,6 +48,18 @@
         .status-tag { font-size: 12px; color: var(--text-muted); }
         #waterReminder { display: none; font-size: 16px; animation: pulse 2s infinite; cursor: pointer; margin-right: 5px; }
 
+        /* 顶部恋爱天数横条与纪念日悬浮窗（完美复刻图片样式） */
+        .love-days-bar { text-align: center; font-size: 14px; padding: 8px 0; background: rgba(230, 103, 103, 0.08); border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .love-days-count { color: var(--heart-color); font-weight: 600; font-size: 16px; }
+        
+        .anniversary-badge { position: absolute; top: 115px; right: 16px; background: rgba(74, 62, 61, 0.85); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(12px); border-radius: 16px; padding: 12px; width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); color: #FFFFFF; z-index: 50; transition: background 0.5s ease; }
+        body.theme-night .anniversary-badge { background: rgba(37, 43, 58, 0.85); }
+        .badge-title { font-size: 10px; opacity: 0.7; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .badge-event { font-size: 13px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .badge-countdown { font-size: 12px; opacity: 0.9; }
+        .badge-days { color: #F4D7C7; font-weight: 700; font-size: 15px; margin: 0 2px; }
+        body.theme-night .badge-days { color: #CD5C5C; }
+
         .content-view { flex: 1; overflow-y: auto; position: relative; padding-bottom: 20px; }
         .content-view::-webkit-scrollbar { width: 0; }
         .view-panel { display: none; flex-direction: column; padding: 20px; gap: 16px; }
@@ -58,7 +70,6 @@
         .message.bot { background: var(--bot-bubble); color: var(--text-main); align-self: flex-start; border-radius: 18px 18px 18px 6px; }
         .message.user { background: var(--user-bubble); color: #FFFFFF !important; align-self: flex-end; border-radius: 18px 18px 6px 18px; font-weight: 500; }
 
-        /* 朋友圈与评论区设计 */
         .moments-list { display: flex; flex-direction: column; gap: 20px; width: 100%; }
         .moment-card { background: var(--bot-bubble); border-radius: 18px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid var(--border-color); }
         .moment-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
@@ -121,21 +132,31 @@
         <span id="waterReminder" title="聊很久啦，喝口水吧☕">☕</span>
         <div class="status-tag" id="statusTag">🌿 正在看着你</div>
     </div>
+
+    <!-- 恋爱天数条 -->
+    <div class="love-days-bar" id="loveDaysBar">
+        ❤️ 我们已在一起 <span class="love-days-count" id="loveDaysCount">0</span> 天 ❤️
+    </div>
+
+    <!-- 纪念日悬浮窗 -->
+    <div class="anniversary-badge" id="anniversaryBadge">
+        <div class="badge-title">最近的纪念日</div>
+        <div class="badge-event" id="badgeEvent">距 崽崽生日</div>
+        <div class="badge-countdown">还有<span class="badge-days" id="badgeDays">0</span>天 🎂</div>
+    </div>
     
     <!-- 统一滚动视图区域 -->
     <div class="content-view" id="contentView">
         <div class="view-panel active" id="panel-chat"></div>
         <div class="view-panel" id="panel-moments">
-            <div class="moments-list" id="momentsListContainer">
-                <!-- 朋友圈卡片将通过JS动态安全渲染，支持实时评论与API联动 -->
-            </div>
+            <div class="moments-list" id="momentsListContainer"></div>
         </div>
     </div>
     
     <!-- 下方输入区 -->
     <div class="phone-input-area" id="inputArea">
         <span class="input-face" onclick="insertEmoji()">😊</span>
-        <input type="text" id="userInput" placeholder="输入消息……" onkeydown="if(event.key==='Enter') sendMessage()" />
+        <input type="text" id="userInput" placeholder="输入消息……" onkeydown="if(event.key==='Enter') sendMessage()" oninput="resetUserTimer()" />
         <button class="send-heart-btn" id="sendBtn" onclick="sendMessage()">❤️</button>
     </div>
 
@@ -178,7 +199,6 @@
 3. 如果是主动发起新对话或开场白，请务必扫视最后几条历史，确保语气或话题带有明显的延续性和温柔承接感，不要突兀失联。`
     };
 
-    // 萧医生的动态文案库
     const staticMoments = [
         { id: 1, time: "今天 06:15", body: "清晨六点的破晓。\n最后一台手术顺利结束，手写完病历，出来刚好看到日出。\n突然觉得，疲惫也有了落脚的地方。", loc: "康华医院 · 临床部", likes: 12 },
         { id: 2, time: "昨天 20:30", body: "路过学校后街，带了一份打包。\n“浓郁番茄底，多加豆皮和黄金糕，绝对不要放任何蒜苗。”\n——记住了，免得某人下次又对着碗挑挑拣拣。", loc: "后街极味马辣烫", likes: 28 },
@@ -189,6 +209,100 @@
     let chatStartTime = Date.now();
     let isTyping = false;
     let momentsData = [];
+    let userInactivityTimer = null; // 查岗计时器
+
+    // 计算相恋天数与最近纪念日
+    function updateLoveCalculations() {
+        const now = new Date();
+        
+        // 1. 计算总相恋天数 (从 2024-12-15 开始)
+        const startDate = new Date('2024-12-15');
+        const diffTime = Math.abs(now - startDate);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        document.getElementById('loveDaysCount').innerText = diffDays;
+
+        // 2. 智能寻找最近的纪念日
+        const currentYear = now.getFullYear();
+        const anniversaryList = [
+            { name: "距 崽崽生日", month: 8, day: 23, icon: "🎂" },
+            { name: "距 初心纪念日", month: 10, day: 1, icon: "✨" },
+            { name: "距 同居纪念日", month: 12, day: 15, icon: "🌹" }
+        ];
+
+        let closestEvent = null;
+        let minDaysDiff = Infinity;
+
+        anniversaryList.forEach(ev => {
+            let targetDate = new Date(currentYear, ev.month - 1, ev.day);
+            // 如果今年的日期已经过了，就计算明年的
+            if (targetDate < now && Math.floor((now - targetDate) / (1000 * 60 * 60 * 24)) > 0) {
+                targetDate = new Date(currentYear + 1, ev.month - 1, ev.day);
+            }
+            const timeTill = targetDate - now;
+            const daysTill = Math.ceil(timeTill / (1000 * 60 * 60 * 24));
+            
+            if (daysTill < minDaysDiff && daysTill >= 0) {
+                minDaysDiff = daysTill;
+                closestEvent = { ...ev, days: daysTill };
+            }
+        });
+
+        if (closestEvent) {
+            document.getElementById('badgeEvent').innerText = closestEvent.name;
+            document.getElementById('badgeDays').innerText = closestEvent.days;
+            // 动态更换小图标
+            document.getElementById('anniversaryBadge').innerHTML = `
+                <div class="badge-title">最近的纪念日</div>
+                <div class="badge-event">${closestEvent.name}</div>
+                <div class="badge-countdown">还有<span class="badge-days">${closestEvent.days}</span>天 ${closestEvent.icon}</div>
+            `;
+        }
+    }
+
+    // 2分钟无交互自动“查岗/碎碎念”机制
+    function resetUserTimer() {
+        clearTimeout(userInactivityTimer);
+        // 如果当前处在聊天面板，才开启计时
+        if (document.getElementById('panel-chat').classList.contains('active') && document.getElementById('homeScreen').style.opacity === '0') {
+            userInactivityTimer = setTimeout(triggerBotNudge, 120000); // 120000毫秒 = 2分钟
+        }
+    }
+
+    async function triggerBotNudge() {
+        if (isTyping) return;
+        showTyping();
+
+        try {
+            const response = await fetch(CONFIG.apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.apiKey}` },
+                body: JSON.stringify({
+                    model: CONFIG.endpointId,
+                    messages: [
+                        ...chatHistory.slice(-10),
+                        { role: "system", content: "由于羽洁已经超过两分钟没有理你了，你有些忍不住了。请以萧意疏的身份，主动发一条1-3句话的‘碎碎念/傲娇查岗’消息轰炸她，表达委屈或黏人，一定要带上[状态: XXX]小尾巴。" }
+                    ],
+                    temperature: 0.85,
+                    max_tokens: 150
+                })
+            });
+            removeTyping();
+            if (response.ok) {
+                const data = await response.json();
+                let botReply = data.choices[0].message.content.trim();
+                const chatBox = document.getElementById('panel-chat');
+                const replyDiv = document.createElement('div'); 
+                replyDiv.classList.add('message', 'bot'); 
+                chatBox.appendChild(replyDiv);
+                typeWriterEffect(botReply, replyDiv);
+                chatHistory.push({ role: "assistant", content: botReply });
+                localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
+            }
+        } catch (e) {
+            removeTyping();
+        }
+        resetUserTimer(); // 触发后重新计时
+    }
 
     function applyTimeThemeAndStatus() {
         const hour = new Date().getHours();
@@ -241,8 +355,8 @@
     window.onload = function() {
         applyTimeThemeAndStatus();
         createFloatingHearts();
+        updateLoveCalculations();
         
-        // 初始化朋友圈本地缓存
         const localMoments = localStorage.getItem('yushu_moments');
         if (localMoments) {
             momentsData = JSON.parse(localMoments);
@@ -310,7 +424,6 @@
             const card = document.createElement('div');
             card.classList.add('moment-card');
 
-            // 渲染评论列表
             let commentsHtml = '';
             if (moment.comments && moment.comments.length > 0) {
                 commentsHtml = `<div class="comment-section">`;
@@ -356,14 +469,12 @@
         const moment = momentsData.find(m => m.id === momentId);
         if (!moment) return;
 
-        // 1. 插入用户评论
         moment.comments = moment.comments || [];
         moment.comments.push({ user: '宝宝', text: text });
         input.value = '';
         renderMoments();
         localStorage.setItem('yushu_moments', JSON.stringify(momentsData));
 
-        // 2. 联动 API 让萧医生针对评论进行温柔回复
         try {
             const response = await fetch(CONFIG.apiUrl, {
                 method: 'POST',
@@ -415,14 +526,20 @@
             document.getElementById('panel-chat').classList.add('active');
             document.getElementById('tab-chat').classList.add('active');
             document.getElementById('inputArea').style.display = 'flex';
+            document.getElementById('loveDaysBar').style.display = 'flex';
+            document.getElementById('anniversaryBadge').style.display = 'block';
             document.getElementById('headerTitleSub').innerText = "与萧医生的对话";
             document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+            resetUserTimer(); // 切换回聊天时恢复查岗计时
         } else {
             document.getElementById('panel-moments').classList.add('active');
             document.getElementById('tab-moments').classList.add('active');
             document.getElementById('inputArea').style.display = 'none';
+            document.getElementById('loveDaysBar').style.display = 'none';
+            document.getElementById('anniversaryBadge').style.display = 'none';
             document.getElementById('headerTitleSub').innerText = "萧医生的朋友圈";
             document.getElementById('contentView').scrollTop = 0;
+            clearTimeout(userInactivityTimer); // 刷朋友圈时暂停查岗
         }
     }
 
@@ -441,6 +558,8 @@
         const inputEl = document.getElementById('userInput');
         const text = inputEl.value.trim();
         if (!text) return;
+
+        clearTimeout(userInactivityTimer); // 用户发消息，清除之前的碎碎念计时
 
         const chatBox = document.getElementById('panel-chat');
         if (chatHistory.length > 2) {
@@ -471,6 +590,8 @@
             removeTyping();
             const errDiv = document.createElement('div'); errDiv.classList.add('message', 'bot'); errDiv.innerText = "小蜜糖，医院这边的信号好像有点弱……🥺"; chatBox.appendChild(errDiv);
         }
+        
+        resetUserTimer(); // 萧医生回完话，开启下一轮2分钟查岗计时
     }
 
     function showTyping() {
@@ -481,8 +602,22 @@
     }
     function removeTyping() { const indicator = document.getElementById('typingIndicator'); if (indicator) indicator.remove(); }
     function insertEmoji() { document.getElementById('userInput').value += "🥺"; }
-    function enterChat() { applyTimeThemeAndStatus(); document.getElementById('homeScreen').style.opacity = '0'; document.getElementById('homeScreen').style.pointerEvents = 'none'; if (chatHistory.length > 1) parseAndSetStatus(chatHistory[chatHistory.length - 1].content); switchTab('chat'); }
-    function exitChat() { generateLinkedGreeting(); document.getElementById('homeScreen').style.opacity = '1'; document.getElementById('homeScreen').style.pointerEvents = 'all'; }
+    
+    function enterChat() { 
+        applyTimeThemeAndStatus(); 
+        updateLoveCalculations();
+        document.getElementById('homeScreen').style.opacity = '0'; 
+        document.getElementById('homeScreen').style.pointerEvents = 'none'; 
+        if (chatHistory.length > 1) parseAndSetStatus(chatHistory[chatHistory.length - 1].content); 
+        switchTab('chat'); 
+    }
+    
+    function exitChat() { 
+        generateLinkedGreeting(); 
+        document.getElementById('homeScreen').style.opacity = '1'; 
+        document.getElementById('homeScreen').style.pointerEvents = 'all'; 
+        clearTimeout(userInactivityTimer); // 退回主页暂停查岗
+    }
 </script>
 </body>
 </html>
