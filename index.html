@@ -6,11 +6,10 @@
     <title>慢慢喜欢你</title>
     <style>
         :root {
-            /* 默认白天色调 - 舒适奶白与治愈暖沙 */
             --bg-color: #F8F5F2;
             --bot-bubble: #FFFFFF;
-            --user-bubble: #F4D7C7; /* 浅杏粉 */
-            --text-main: #4A3E3D;   /* 萧医生字色：深可可豆色 */
+            --user-bubble: #F4D7C7;
+            --text-main: #4A3E3D;
             --text-muted: #8A7E7C;
             --heart-color: #E66767;
             --header-bg: rgba(248, 245, 242, 0.95);
@@ -18,421 +17,81 @@
             --nav-bg: #FFFFFF;
         }
 
-        /* 🌸 极致审美重新调色 */
-        body.theme-morning {
-            --bg-color: #FFF5F5; /* 樱花粉白 */
-            --bot-bubble: #FFFFFF;
-            --user-bubble: #FAAAA6; /* 浓郁蜜桃粉 */
-            --text-main: #5C4343;
-            --header-bg: rgba(255, 245, 245, 0.95);
-        }
-        body.theme-noon {
-            --bg-color: #F3F7F4; /* 薄荷浅绿 */
-            --bot-bubble: #FFFFFF;
-            --user-bubble: #8FA89B; /* 气质灰绿 */
-            --text-main: #38423B;
-            --header-bg: rgba(243, 247, 244, 0.95);
-        }
-        body.theme-evening {
-            --bg-color: #FFF3EA; /* 落日暖橘 */
-            --bot-bubble: #FFFFFF;
-            --user-bubble: #EAA07A; /* 温暖脏橘 */
-            --text-main: #543E32;
-            --header-bg: rgba(255, 243, 234, 0.95);
-        }
-        body.theme-night {
-            --bg-color: #1A1E29; /* 暗夜微醺蓝 */
-            --bot-bubble: #252B3A;
-            --user-bubble: #CD5C5C; /* 玫瑰木雕红 */
-            --text-main: #E2E6EE;
-            --text-muted: #7E8696;
-            --header-bg: rgba(26, 30, 41, 0.95);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --nav-bg: #202634;
-        }
+        body.theme-morning { --bg-color: #FFF5F5; --bot-bubble: #FFFFFF; --user-bubble: #FAAAA6; --text-main: #5C4343; --header-bg: rgba(255, 245, 245, 0.95); }
+        body.theme-noon { --bg-color: #F3F7F4; --bot-bubble: #FFFFFF; --user-bubble: #8FA89B; --text-main: #38423B; --header-bg: rgba(243, 247, 244, 0.95); }
+        body.theme-evening { --bg-color: #FFF3EA; --bot-bubble: #FFFFFF; --user-bubble: #EAA07A; --text-main: #543E32; --header-bg: rgba(255, 243, 234, 0.95); }
+        body.theme-night { --bg-color: #1A1E29; --bot-bubble: #252B3A; --user-bubble: #CD5C5C; --text-main: #E2E6EE; --text-muted: #7E8696; --header-bg: rgba(26, 30, 41, 0.95); --border-color: rgba(255, 255, 255, 0.1); --nav-bg: #202634; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #EAE5E0; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: var(--text-main); transition: background 0.5s ease; }
+        .phone-container { width: 100%; max-width: 412px; height: 100vh; max-height: 892px; background: var(--bg-color); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); display: flex; flex-direction: column; overflow: hidden; position: relative; transition: background 0.5s ease; }
+        @media (min-width: 420px) { .phone-container { border-radius: 36px; height: 840px; border: 6px solid #FFFFFF; } }
 
-        body {
-            background: #EAE5E0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--text-main);
-            transition: background 0.5s ease;
-        }
+        .hearts-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .floating-heart { position: absolute; bottom: -20px; color: var(--heart-color); opacity: 0.15; animation: floatUp 8s linear infinite; font-size: 14px; }
+        @keyframes floatUp { 0% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0.15; } 50% { opacity: 0.25; } 100% { transform: translateY(-900px) translateX(50px) scale(1.2); opacity: 0; } }
 
-        .phone-container {
-            width: 100%;
-            max-width: 412px;
-            height: 100vh;
-            max-height: 892px;
-            background: var(--bg-color);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-            transition: background 0.5s ease;
-        }
+        .home-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; transition: opacity 0.5s ease, pointer-events 0.5s ease; }
+        .home-avatar { font-size: 50px; margin-bottom: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05)); }
+        .home-title { font-size: 24px; font-weight: 600; letter-spacing: 1px; margin-bottom: 4px; }
+        .home-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 40px; }
+        .home-divider { width: 60%; height: 1px; background: linear-gradient(to right, transparent, #D9D2CB, transparent); margin: 20px 0; }
+        .home-status-text { font-size: 14px; color: var(--text-main); text-align: center; line-height: 1.6; max-width: 80%; }
+        .enter-btn { margin-top: 50px; background: #FFFFFF; color: #4A3E3D; border: 1px solid #E5DEC9; padding: 12px 40px; border-radius: 24px; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.2s; }
 
-        @media (min-width: 420px) {
-            .phone-container {
-                border-radius: 36px;
-                height: 840px;
-                border: 6px solid #FFFFFF;
-            }
-        }
+        .phone-header { padding: 45px 20px 16px 20px; background: var(--header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; backdrop-filter: blur(10px); z-index: 10; transition: background 0.5s ease; }
+        .back-arrow { font-size: 20px; cursor: pointer; padding-right: 15px; color: var(--text-muted); }
+        .header-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .header-info { flex: 1; display: flex; flex-direction: column; margin-left: 10px; }
+        .header-name { font-size: 16px; font-weight: 600; }
+        .header-title-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        .status-tag { font-size: 12px; color: var(--text-muted); }
+        #waterReminder { display: none; font-size: 16px; animation: pulse 2s infinite; cursor: pointer; margin-right: 5px; }
 
-        /* 💖 浪漫浮动爱心背景层 */
-        .hearts-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .floating-heart {
-            position: absolute;
-            bottom: -20px;
-            color: var(--heart-color);
-            opacity: 0.15;
-            animation: floatUp 8s linear infinite;
-            font-size: 14px;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0.15; }
-            50% { opacity: 0.25; }
-            100% { transform: translateY(-900px) translateX(50px) scale(1.2); opacity: 0; }
-        }
-
-        /* 首页状态 */
-        .home-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-            transition: opacity 0.5s ease, pointer-events 0.5s ease;
-        }
-
-        .home-avatar {
-            font-size: 50px;
-            margin-bottom: 12px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05));
-        }
-
-        .home-title {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-
-        .home-subtitle {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-        }
-
-        .home-divider {
-            width: 60%;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #D9D2CB, transparent);
-            margin: 20px 0;
-        }
-
-        .home-status-text {
-            font-size: 14px;
-            color: var(--text-main);
-            text-align: center;
-            line-height: 1.6;
-            max-width: 80%;
-        }
-
-        .enter-btn {
-            margin-top: 50px;
-            background: #FFFFFF;
-            color: #4A3E3D;
-            border: 1px solid #E5DEC9;
-            padding: 12px 40px;
-            border-radius: 24px;
-            font-size: 15px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            transition: all 0.2s;
-        }
-        .enter-btn:active {
-            transform: scale(0.96);
-            background: #FAF8F5;
-        }
-
-        .phone-header {
-            padding: 45px 20px 16px 20px;
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-            transition: background 0.5s ease, border-bottom 0.5s ease;
-        }
-
-        .back-arrow {
-            font-size: 20px;
-            cursor: pointer;
-            padding-right: 15px;
-            color: var(--text-muted);
-        }
-
-        .header-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #FFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            margin-right: 10px;
-        }
-
-        .header-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header-name {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .header-title-sub {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 1px;
-        }
-
-        .status-tag {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        #waterReminder {
-            display: none;
-            font-size: 16px;
-            animation: pulse 2s infinite;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-
-        /* 统一视图容器层 */
-        .content-view {
-            flex: 1;
-            overflow-y: auto;
-            position: relative;
-            padding-bottom: 20px;
-        }
+        .content-view { flex: 1; overflow-y: auto; position: relative; padding-bottom: 20px; }
         .content-view::-webkit-scrollbar { width: 0; }
+        .view-panel { display: none; flex-direction: column; padding: 20px; gap: 16px; }
+        .view-panel.active { display: flex; }
 
-        /* 视图独立控制 */
-        .view-panel {
-            display: none;
-            flex-direction: column;
-            padding: 20px;
-            gap: 16px;
-        }
-        .view-panel.active {
-            display: flex;
-        }
+        .time-divider { align-self: center; font-size: 11px; color: var(--text-muted); background: rgba(217, 210, 203, 0.3); padding: 3px 10px; border-radius: 12px; margin: 10px 0; }
+        .message { max-width: 75%; padding: 12px 16px; font-size: 15px; line-height: 1.5; word-break: break-all; box-shadow: 0 2px 6px rgba(138, 126, 124, 0.04); z-index: 2; }
+        .message.bot { background: var(--bot-bubble); color: var(--text-main); align-self: flex-start; border-radius: 18px 18px 18px 6px; }
+        .message.user { background: var(--user-bubble); color: #FFFFFF !important; align-self: flex-end; border-radius: 18px 18px 6px 18px; font-weight: 500; }
 
-        .time-divider {
-            align-self: center;
-            font-size: 11px;
-            color: var(--text-muted);
-            background: rgba(217, 210, 203, 0.3);
-            padding: 3px 10px;
-            border-radius: 12px;
-            margin: 10px 0;
-        }
+        /* 朋友圈与评论区设计 */
+        .moments-list { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        .moment-card { background: var(--bot-bubble); border-radius: 18px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid var(--border-color); }
+        .moment-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .moment-author { font-size: 14px; font-weight: 600; }
+        .moment-time { font-size: 11px; color: var(--text-muted); }
+        .moment-body { font-size: 14px; line-height: 1.6; white-space: pre-line; color: var(--text-main); margin-bottom: 12px; }
+        .moment-footer { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px; margin-bottom: 8px; }
+        .like-btn { background: none; border: none; color: var(--heart-color); cursor: pointer; font-weight: 500; }
+        
+        .comment-section { background: rgba(217, 210, 203, 0.15); border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; font-size: 13px; }
+        .comment-item { line-height: 1.4; }
+        .comment-user { font-weight: 600; color: var(--heart-color); }
+        .comment-bot-user { font-weight: 600; color: var(--text-muted); }
+        
+        .comment-input-box { display: flex; gap: 8px; margin-top: 10px; }
+        .comment-input-box input { flex: 1; background: #FFFFFF; border: 1px solid rgba(217, 210, 203, 0.5); padding: 6px 12px; border-radius: 16px; font-size: 13px; outline: none; }
+        .comment-submit-btn { background: none; border: none; color: var(--heart-color); font-size: 13px; font-weight: 600; cursor: pointer; }
 
-        .message {
-            max-width: 75%;
-            padding: 12px 16px;
-            font-size: 15px;
-            line-height: 1.5;
-            word-break: break-all;
-            box-shadow: 0 2px 6px rgba(138, 126, 124, 0.04);
-            z-index: 2;
-        }
+        .phone-input-area { padding: 12px 16px 20px 16px; background: var(--bg-color); display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--border-color); z-index: 10; }
+        .input-face { font-size: 22px; color: var(--text-muted); cursor: pointer; }
+        .phone-input-area input { flex: 1; background: #FFFFFF; border: 1px solid rgba(217, 210, 203, 0.5); padding: 12px 18px; border-radius: 24px; color: #4A3E3D; font-size: 15px; outline: none; }
+        .send-heart-btn { background: transparent; border: none; font-size: 24px; cursor: pointer; color: var(--heart-color); }
 
-        .message.bot {
-            background: var(--bot-bubble);
-            color: var(--text-main);
-            align-self: flex-start;
-            border-radius: 18px 18px 18px 6px;
-            transition: background 0.5s ease;
-        }
-
-        .message.user {
-            background: var(--user-bubble);
-            color: #FFFFFF !important; /* 强制纯白撞色 */
-            align-self: flex-end;
-            border-radius: 18px 18px 6px 18px;
-            transition: background 0.5s ease;
-            font-weight: 500;
-        }
-
-        /* 朋友圈样式精修 */
-        .moments-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-        }
-        .moment-card {
-            background: var(--bot-bubble);
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            border: 1px solid var(--border-color);
-            transition: background 0.5s ease, border 0.5s ease;
-        }
-        .moment-card-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        .moment-author {
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .moment-time {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .moment-body {
-            font-size: 14px;
-            line-height: 1.6;
-            white-space: pre-line;
-            color: var(--text-main);
-            margin-bottom: 12px;
-        }
-        .moment-footer {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            padding-top: 10px;
-        }
-        .like-btn {
-            background: none;
-            border: none;
-            color: var(--heart-color);
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        /* 输入框区域 */
-        .phone-input-area {
-            padding: 12px 16px 20px 16px;
-            background: var(--bg-color);
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            border-top: 1px solid var(--border-color);
-            z-index: 10;
-            transition: background 0.5s ease, border-top 0.5s ease;
-        }
-
-        .input-face {
-            font-size: 22px;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-
-        .phone-input-area input {
-            flex: 1;
-            background: #FFFFFF;
-            border: 1px solid rgba(217, 210, 203, 0.5);
-            padding: 12px 18px;
-            border-radius: 24px;
-            color: #4A3E3D;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .send-heart-btn {
-            background: transparent;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--heart-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.1s;
-            outline: none;
-        }
-        .send-heart-btn.pop { animation: heartPop 0.3s ease; }
-
-        /* 底部原生 Tab 导航栏 */
-        .bottom-nav {
-            height: 60px;
-            background: var(--nav-bg);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 15;
-            transition: background 0.5s ease, border-top 0.5s ease;
-        }
-        .nav-tab {
-            flex: 1;
-            height: 100%;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 2px;
-            transition: color 0.3s;
-        }
-        .nav-tab.active {
-            color: var(--heart-color);
-        }
+        .bottom-nav { height: 60px; background: var(--nav-bg); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 15; }
+        .nav-tab { flex: 1; height: 100%; background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px; }
+        .nav-tab.active { color: var(--heart-color); }
 
         .typing-indicator { display: flex; gap: 4px; padding: 6px 4px; }
         .typing-indicator span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: blink 1.4s infinite both; }
         .typing-indicator span:nth-child(2) { animation-delay: .2s; }
         .typing-indicator span:nth-child(3) { animation-delay: .4s; }
-
         @keyframes blink { 0%, 100% { opacity: .2; } 20% { opacity: 1; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-        @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -454,7 +113,7 @@
     <!-- 顶部状态栏 -->
     <div class="phone-header">
         <span class="back-arrow" onclick="exitChat()">←</span>
-        <img src="avatar.jpg" class="header-avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+        <img src="avatar.jpg" class="header-avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
         <div class="header-info">
             <span class="header-name">萧意疏</span>
             <span class="header-title-sub" id="headerTitleSub">与萧医生的对话</span>
@@ -465,63 +124,10 @@
     
     <!-- 统一滚动视图区域 -->
     <div class="content-view" id="contentView">
-        <!-- 视图 1：纯净聊天面板 -->
         <div class="view-panel active" id="panel-chat"></div>
-
-        <!-- 视图 2：唯美朋友圈面板 -->
         <div class="view-panel" id="panel-moments">
-            <div class="moments-list">
-                <!-- 动态 1 -->
-                <div class="moment-card">
-                    <div class="moment-card-header">
-                        <img src="avatar.jpg" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <div class="moment-author">萧意疏</div>
-                            <div class="moment-time">今天 06:15</div>
-                        </div>
-                    </div>
-                    <div class="moment-body">清晨六点的破晓。
-最后一台手术顺利结束，手写完病历，出来刚好看到日出。
-突然觉得，疲惫也有了落脚的地方。</div>
-                    <div class="moment-footer">
-                        <span>📍 康华医院 · 临床部</span>
-                        <button class="like-btn" onclick="toggleLike(this)">❤️ <span class="like-count">12</span></button>
-                    </div>
-                </div>
-                <!-- 动态 2 -->
-                <div class="moment-card">
-                    <div class="moment-header-card moment-card-header">
-                        <img src="avatar.jpg" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <div class="moment-author">萧意疏</div>
-                            <div class="moment-time">昨天 20:30</div>
-                        </div>
-                    </div>
-                    <div class="moment-body">路过学校后街，带了一份打包。
-“浓郁番茄底，多加豆皮和黄金糕，绝对不要放任何蒜苗。”
-——记住了，免得某人下次又对着碗挑挑拣拣。</div>
-                    <div class="moment-footer">
-                        <span>📍 后街极味马辣烫</span>
-                        <button class="like-btn" onclick="toggleLike(this)">❤️ <span class="like-count">28</span></button>
-                    </div>
-                </div>
-                <!-- 动态 3 -->
-                <div class="moment-card">
-                    <div class="moment-card-header">
-                        <img src="avatar.jpg" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <div class="moment-author">萧意疏</div>
-                            <div class="moment-time">前天 14:10</div>
-                        </div>
-                    </div>
-                    <div class="moment-body">在科室楼下花坛遇到一只小花猫。
-长得有几分像某人家的那只大狸花，脾气也是，喂它吃肉垫还冲我哈气。
-不过，最后还是乖乖让我摸了头。</div>
-                    <div class="moment-footer">
-                        <span>📍 医院住院部花园</span>
-                        <button class="like-btn" onclick="toggleLike(this)">❤️ <span class="like-count">45</span></button>
-                    </div>
-                </div>
+            <div class="moments-list" id="momentsListContainer">
+                <!-- 朋友圈卡片将通过JS动态安全渲染，支持实时评论与API联动 -->
             </div>
         </div>
     </div>
@@ -533,7 +139,7 @@
         <button class="send-heart-btn" id="sendBtn" onclick="sendMessage()">❤️</button>
     </div>
 
-    <!-- 方案 A：底部标签导航栏 -->
+    <!-- 底部 Tab 导航栏 -->
     <div class="bottom-nav">
         <button class="nav-tab active" id="tab-chat" onclick="switchTab('chat')">💬 聊天</button>
         <button class="nav-tab" id="tab-moments" onclick="switchTab('moments')">🌸 朋友圈</button>
@@ -572,64 +178,47 @@
 3. 如果是主动发起新对话或开场白，请务必扫视最后几条历史，确保语气或话题带有明显的延续性和温柔承接感，不要突兀失联。`
     };
 
+    // 萧医生的动态文案库
+    const staticMoments = [
+        { id: 1, time: "今天 06:15", body: "清晨六点的破晓。\n最后一台手术顺利结束，手写完病历，出来刚好看到日出。\n突然觉得，疲惫也有了落脚的地方。", loc: "康华医院 · 临床部", likes: 12 },
+        { id: 2, time: "昨天 20:30", body: "路过学校后街，带了一份打包。\n“浓郁番茄底，多加豆皮和黄金糕，绝对不要放任何蒜苗。”\n——记住了，免得某人下次又对着碗挑挑拣拣。", loc: "后街极味马辣烫", likes: 28 },
+        { id: 3, time: "前天 14:10", body: "在科室楼下花坛遇到一只小花猫。\n长得有几分像某人家的那只大狸花，脾气也是，喂它吃肉垫还冲我哈气。\n不过，最后还是乖乖让我摸了头。", loc: "医院住院部花园", likes: 45 }
+    ];
+
     let chatHistory = [];
     let chatStartTime = Date.now();
     let isTyping = false;
+    let momentsData = [];
 
     function applyTimeThemeAndStatus() {
         const hour = new Date().getHours();
         const body = document.body;
         body.className = '';
-
         let defaultStatus = "🌿 正在看着你";
-        if (hour >= 6 && hour < 10) {
-            body.classList.add('theme-morning');
-            defaultStatus = "🌅 准备上班中";
-        } else if (hour >= 10 && hour < 17) {
-            body.classList.add('theme-noon');
-            defaultStatus = "🏥 门诊值班中";
-        } else if (hour >= 17 && hour < 19.5) {
-            body.classList.add('theme-evening');
-            defaultStatus = "🌆 下班买菜中";
-        } else {
-            body.classList.add('theme-night');
-            defaultStatus = "🌙 陪着你入睡";
-        }
+        if (hour >= 6 && hour < 10) { body.classList.add('theme-morning'); defaultStatus = "🌅 准备上班中"; }
+        else if (hour >= 10 && hour < 17) { body.classList.add('theme-noon'); defaultStatus = "🏥 门诊值班中"; }
+        else if (hour >= 17 && hour < 19.5) { body.classList.add('theme-evening'); defaultStatus = "🌆 下班买菜中"; }
+        else { body.classList.add('theme-night'); defaultStatus = "🌙 陪着你入睡"; }
         return defaultStatus;
     }
 
     function generateLinkedGreeting() {
         const hour = new Date().getHours();
         let lastUserMessage = "";
-        
         for (let i = chatHistory.length - 1; i >= 0; i--) {
-            if (chatHistory[i].role === 'user') {
-                lastUserMessage = chatHistory[i].content;
-                break;
-            }
+            if (chatHistory[i].role === 'user') { lastUserMessage = chatHistory[i].content; break; }
         }
-
         let linkContext = "";
         if (lastUserMessage) {
-            if (lastUserMessage.includes("累") || lastUserMessage.includes("课")) {
-                linkContext = "昨晚听你说累，心里总记挂着。";
-            } else if (lastUserMessage.includes("爱") || lastUserMessage.includes("想")) {
-                linkContext = "想起你之前说想我，现在心跳还快着。";
-            } else {
-                linkContext = "刚刚一闲下来，脑子里全全是你。";
-            }
+            if (lastUserMessage.includes("累") || lastUserMessage.includes("课")) linkContext = "昨晚听你说累，心里总记挂着。";
+            else if (lastUserMessage.includes("爱") || lastUserMessage.includes("想")) linkContext = "想起你之前说想我，现在心跳还快着。";
+            else linkContext = "刚刚一闲下来，脑子里全全是你。";
         }
-
         let greeting = "宝宝，我一直都在呢。";
-        if (hour >= 6 && hour < 10) {
-            greeting = `${linkContext || "醒了没宝宝？"}新的一天开始了，记得乖乖吃早餐，多喝水。❤️ [状态: 穿白大褂中]`;
-        } else if (hour >= 10 && hour < 17) {
-            greeting = `${linkContext || "小乖，今天课多吗？"}刚查完房，有点空闲，第一個想到的就是给你发消息。[状态: 刚出病房]`;
-        } else if (hour >= 17 && hour < 19.5) {
-            greeting = `${linkContext || "饭做好了，小蜜糖。"}汤还在小火慢炖呢，洗洗手，一会过来抱抱我。🥺 [状态: 给你熬汤中]`;
-        } else {
-            greeting = `${linkContext || "夜深了宝宝，今天听不听话？"}不许熬夜咯，过来我怀里，陪你睡。💤 [状态: 躺在床头看书]`;
-        }
+        if (hour >= 6 && hour < 10) greeting = `${linkContext || "醒了没宝宝？"}新的一天开始了，记得乖乖吃早餐，多喝水。❤️ [状态: 穿白大褂中]`;
+        else if (hour >= 10 && hour < 17) greeting = `${linkContext || "小乖，今天课多吗？"}刚查完房，有点空闲，第一個想到的就是给你发消息。[状态: 刚出病房]`;
+        else if (hour >= 17 && hour < 19.5) greeting = `${linkContext || "饭做好了，小蜜糖。"}汤还在小火慢炖呢，洗洗手，一会过来抱抱我。🥺 [状态: 给你熬汤中]`;
+        else greeting = `${linkContext || "夜深了宝宝，今天听不听话？"}不许熬夜咯，过来我怀里，陪你睡。💤 [状态: 躺在床头看书]`;
 
         document.getElementById('homeGreeting').innerHTML = greeting.split('[状态:')[0].trim();
         return greeting;
@@ -653,20 +242,33 @@
         applyTimeThemeAndStatus();
         createFloatingHearts();
         
+        // 初始化朋友圈本地缓存
+        const localMoments = localStorage.getItem('yushu_moments');
+        if (localMoments) {
+            momentsData = JSON.parse(localMoments);
+        } else {
+            momentsData = staticMoments.map(m => ({ ...m, comments: [] }));
+            localStorage.setItem('yushu_moments', JSON.stringify(momentsData));
+        }
+
         const localData = localStorage.getItem('yushu_chat_v2');
         if (localData) {
             chatHistory = JSON.parse(localData);
             chatHistory[0] = systemPrompt;
+            let lastBotMsg = "";
+            for (let i = chatHistory.length - 1; i >= 1; i--) {
+                if (chatHistory[i].role === 'assistant') { lastBotMsg = chatHistory[i].content; break; }
+            }
+            if (lastBotMsg) document.getElementById('homeGreeting').innerHTML = lastBotMsg.split('[状态:')[0].trim();
+            else generateLinkedGreeting();
         } else {
             const initialGreeting = generateLinkedGreeting();
-            chatHistory = [
-                systemPrompt,
-                { role: "assistant", content: initialGreeting }
-            ];
+            chatHistory = [systemPrompt, { role: "assistant", content: initialGreeting }];
             localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
         }
 
         renderAllMessages();
+        renderMoments();
 
         setInterval(() => {
             if (Date.now() - chatStartTime > 30 * 60 * 1000) {
@@ -678,7 +280,6 @@
     function renderAllMessages() {
         const chatBox = document.getElementById('panel-chat');
         chatBox.innerHTML = '';
-        
         const timeDiv = document.createElement('div');
         timeDiv.classList.add('time-divider');
         timeDiv.innerText = "💕 2024-12-15 确定关系并正式同居";
@@ -686,36 +287,124 @@
 
         for (let i = 1; i < chatHistory.length; i++) {
             const msg = chatHistory[i];
-            
             if (i > 1 && i % 4 === 0) {
                 const stamp = document.createElement('div');
                 stamp.classList.add('time-divider');
                 stamp.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 chatBox.appendChild(stamp);
             }
-
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', msg.role === 'user' ? 'user' : 'bot');
             msgDiv.innerText = msg.content.replace(/\[状态:.*?\]/g, '').trim();
             chatBox.appendChild(msgDiv);
-
-            if (i === chatHistory.length - 1 && msg.role === 'assistant') {
-                parseAndSetStatus(msg.content);
-            }
+            if (i === chatHistory.length - 1 && msg.role === 'assistant') parseAndSetStatus(msg.content);
         }
         document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
     }
 
-    function parseAndSetStatus(content) {
-        const match = content.match(/\[状态:(.*?)\]/);
-        if (match && match[1]) {
-            document.getElementById('statusTag').innerText = "🌿 " + match[1].trim();
-        } else {
-            document.getElementById('statusTag').innerText = applyTimeThemeAndStatus();
+    function renderMoments() {
+        const container = document.getElementById('momentsListContainer');
+        container.innerHTML = '';
+
+        momentsData.forEach(moment => {
+            const card = document.createElement('div');
+            card.classList.add('moment-card');
+
+            // 渲染评论列表
+            let commentsHtml = '';
+            if (moment.comments && moment.comments.length > 0) {
+                commentsHtml = `<div class="comment-section">`;
+                moment.comments.forEach(c => {
+                    const isBot = c.user === '萧意疏';
+                    commentsHtml += `
+                        <div class="comment-item">
+                            <span class="${isBot ? 'comment-bot-user' : 'comment-user'}">${c.user}:</span> 
+                            <span>${c.text}</span>
+                        </div>`;
+                });
+                commentsHtml += `</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="moment-card-header">
+                    <img src="avatar.jpg" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                    <div>
+                        <div class="moment-author">萧意疏</div>
+                        <div class="moment-time">${moment.time}</div>
+                    </div>
+                </div>
+                <div class="moment-body">${moment.body}</div>
+                <div class="moment-footer">
+                    <span>📍 ${moment.loc}</span>
+                    <button class="like-btn" onclick="toggleLike(this)">❤️ <span class="like-count">${moment.likes}</span></button>
+                </div>
+                ${commentsHtml}
+                <div class="comment-input-box">
+                    <input type="text" placeholder="评论他的动态..." id="comment-in-${moment.id}" onkeydown="if(event.key==='Enter') sendComment(${moment.id})" />
+                    <button class="comment-submit-btn" onclick="sendComment(${moment.id})">发送</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    async function sendComment(momentId) {
+        const input = document.getElementById(`comment-in-${momentId}`);
+        const text = input.value.trim();
+        if (!text) return;
+
+        const moment = momentsData.find(m => m.id === momentId);
+        if (!moment) return;
+
+        // 1. 插入用户评论
+        moment.comments = moment.comments || [];
+        moment.comments.push({ user: '宝宝', text: text });
+        input.value = '';
+        renderMoments();
+        localStorage.setItem('yushu_moments', JSON.stringify(momentsData));
+
+        // 2. 联动 API 让萧医生针对评论进行温柔回复
+        try {
+            const response = await fetch(CONFIG.apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.apiKey}` },
+                body: JSON.stringify({
+                    model: CONFIG.endpointId,
+                    messages: [
+                        systemPrompt,
+                        { role: "system", content: `你刚才发了一条朋友圈，内容是："${moment.body}"。韩羽洁在下方评论了你："${text}"。请你以萧意疏的身份，在朋友圈评论区对她进行简短的互动回复（不超过两句话，口语化，亲昵浪漫点，不需要带活动状态标签）。` }
+                    ],
+                    temperature: 0.85,
+                    max_tokens: 150
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                let botReply = data.choices[0].message.content.trim();
+                moment.comments.push({ user: '萧意疏', text: botReply });
+                renderMoments();
+                localStorage.setItem('yushu_moments', JSON.stringify(momentsData));
+            }
+        } catch (e) {
+            moment.comments.push({ user: '萧意疏', text: '看到了，等我下班回去好好抱抱你。❤️' });
+            renderMoments();
         }
     }
 
-    // Tab 导航流式切换
+    function toggleLike(btn) {
+        const countSpan = btn.querySelector('.like-count');
+        let count = parseInt(countSpan.innerText);
+        if(btn.classList.contains('liked')) { btn.classList.remove('liked'); countSpan.innerText = count - 1; }
+        else { btn.classList.add('liked'); countSpan.innerText = count + 1; }
+    }
+
+    function parseAndSetStatus(content) {
+        const match = content.match(/\[状态:(.*?)\]/);
+        if (match && match[1]) document.getElementById('statusTag').innerText = "🌿 " + match[1].trim();
+        else document.getElementById('statusTag').innerText = applyTimeThemeAndStatus();
+    }
+
     function switchTab(target) {
         document.getElementById('panel-chat').classList.remove('active');
         document.getElementById('panel-moments').classList.remove('active');
@@ -737,34 +426,12 @@
         }
     }
 
-    function toggleLike(btn) {
-        const countSpan = btn.querySelector('.like-count');
-        let count = parseInt(countSpan.innerText);
-        if(btn.classList.contains('liked')) {
-            btn.classList.remove('liked');
-            countSpan.innerText = count - 1;
-        } else {
-            btn.classList.add('liked');
-            countSpan.innerText = count + 1;
-        }
-    }
-
     function typeWriterEffect(text, element) {
-        let i = 0;
-        isTyping = true;
-        element.innerText = "";
+        let i = 0; isTyping = true; element.innerText = "";
         let cleanText = text.replace(/\[状态:.*?\]/g, '').trim();
-        
         function type() {
-            if (i < cleanText.length) {
-                element.innerText += cleanText.charAt(i);
-                i++;
-                document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
-                setTimeout(type, Math.random() * 35 + 25);
-            } else {
-                isTyping = false;
-                parseAndSetStatus(text);
-            }
+            if (i < cleanText.length) { element.innerText += cleanText.charAt(i); i++; document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight; setTimeout(type, Math.random() * 35 + 25); }
+            else { isTyping = false; parseAndSetStatus(text); }
         }
         type();
     }
@@ -775,102 +442,47 @@
         const text = inputEl.value.trim();
         if (!text) return;
 
-        const sendBtn = document.getElementById('sendBtn');
-        sendBtn.classList.add('pop');
-        setTimeout(() => sendBtn.classList.remove('pop'), 300);
-
         const chatBox = document.getElementById('panel-chat');
-        
         if (chatHistory.length > 2) {
-            const stamp = document.createElement('div');
-            stamp.classList.add('time-divider');
-            stamp.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            chatBox.appendChild(stamp);
+            const stamp = document.createElement('div'); stamp.classList.add('time-divider'); stamp.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); chatBox.appendChild(stamp);
         }
-
-        const msgDiv = document.createElement('div');
-        msgDiv.classList.add('message', 'user');
-        msgDiv.innerText = text;
-        chatBox.appendChild(msgDiv);
-        
-        inputEl.value = '';
-        document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
+        const msgDiv = document.createElement('div'); msgDiv.classList.add('message', 'user'); msgDiv.innerText = text; chatBox.appendChild(msgDiv);
+        inputEl.value = ''; document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
 
         chatHistory.push({ role: "user", content: text });
         localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
-
         showTyping();
 
         try {
             const response = await fetch(CONFIG.apiUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${CONFIG.apiKey}`
-                },
-                body: JSON.stringify({
-                    model: CONFIG.endpointId,
-                    messages: chatHistory.slice(-30), 
-                    temperature: 0.82,
-                    max_tokens: 300
-                })
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.apiKey}` },
+                body: JSON.stringify({ model: CONFIG.endpointId, messages: chatHistory.slice(-30), temperature: 0.82, max_tokens: 300 })
             });
-
             removeTyping();
             if (!response.ok) throw new Error();
-
             const data = await response.json();
             let botReply = data.choices[0].message.content.trim();
-
-            const replyDiv = document.createElement('div');
-            replyDiv.classList.add('message', 'bot');
-            chatBox.appendChild(replyDiv);
-            
+            const replyDiv = document.createElement('div'); replyDiv.classList.add('message', 'bot'); chatBox.appendChild(replyDiv);
             typeWriterEffect(botReply, replyDiv);
-
             chatHistory.push({ role: "assistant", content: botReply });
             localStorage.setItem('yushu_chat_v2', JSON.stringify(chatHistory));
-
         } catch (error) {
             removeTyping();
-            const errDiv = document.createElement('div');
-            errDiv.classList.add('message', 'bot');
-            errDiv.innerText = "小蜜糖，医院这边的信号好像有点弱……你刚才说什么？🥺";
-            chatBox.appendChild(errDiv);
+            const errDiv = document.createElement('div'); errDiv.classList.add('message', 'bot'); errDiv.innerText = "小蜜糖，医院这边的信号好像有点弱……🥺"; chatBox.appendChild(errDiv);
         }
     }
 
     function showTyping() {
         const chatBox = document.getElementById('panel-chat');
-        const indicator = document.createElement('div');
-        indicator.classList.add('message', 'bot');
-        indicator.id = 'typingIndicator';
-        indicator.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
-        chatBox.appendChild(indicator);
+        const indicator = document.createElement('div'); indicator.classList.add('message', 'bot'); indicator.id = 'typingIndicator';
+        indicator.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`; chatBox.appendChild(indicator);
         document.getElementById('contentView').scrollTop = document.getElementById('contentView').scrollHeight;
     }
-
-    function removeTyping() {
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-    }
-
+    function removeTyping() { const indicator = document.getElementById('typingIndicator'); if (indicator) indicator.remove(); }
     function insertEmoji() { document.getElementById('userInput').value += "🥺"; }
-    function enterChat() {
-        applyTimeThemeAndStatus();
-        document.getElementById('homeScreen').style.opacity = '0';
-        document.getElementById('homeScreen').style.pointerEvents = 'none';
-        if (chatHistory.length > 1) {
-            parseAndSetStatus(chatHistory[chatHistory.length - 1].content);
-        }
-        switchTab('chat');
-    }
-    function exitChat() {
-        generateLinkedGreeting();
-        document.getElementById('homeScreen').style.opacity = '1';
-        document.getElementById('homeScreen').style.pointerEvents = 'all';
-    }
+    function enterChat() { applyTimeThemeAndStatus(); document.getElementById('homeScreen').style.opacity = '0'; document.getElementById('homeScreen').style.pointerEvents = 'none'; if (chatHistory.length > 1) parseAndSetStatus(chatHistory[chatHistory.length - 1].content); switchTab('chat'); }
+    function exitChat() { generateLinkedGreeting(); document.getElementById('homeScreen').style.opacity = '1'; document.getElementById('homeScreen').style.pointerEvents = 'all'; }
 </script>
-
 </body>
 </html>
