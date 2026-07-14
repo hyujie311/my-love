@@ -338,9 +338,44 @@ body.theme-night{
         .comment-user { font-weight: 600; color: var(--heart-color); }
         .comment-bot-user { font-weight: 600; color: var(--text-muted); }
         
-        .comment-input-box { display: flex; gap: 8px; margin-top: 10px; }
-        .comment-input-box input { flex: 1; background: #FFFFFF; border: 1px solid rgba(217, 210, 203, 0.5); padding: 6px 12px; border-radius: 16px; font-size: 13px; outline: none; }
-        .comment-submit-btn { background: none; border: none; color: var(--heart-color); font-size: 13px; font-weight: 600; cursor: pointer; }
+       .comment-input-box{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+    align-items:center;
+}
+
+.comment-input-box input{
+    flex:1;
+    height:38px;
+    padding:0 14px;
+    border-radius:20px;
+    border:1px solid rgba(0,0,0,.06);
+    background:rgba(255,255,255,.85);
+    color:var(--text-main);
+    font-size:13px;
+    outline:none;
+    transition:.25s;
+}
+
+.comment-input-box input:focus{
+    border-color:var(--heart-color);
+    box-shadow:0 0 0 4px rgba(239,114,128,.12);
+}
+
+.comment-submit-btn{
+    border:none;
+    background:transparent;
+    color:var(--heart-color);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.comment-submit-btn:hover{
+    transform:scale(1.06);
+}
 
         .phone-input-area { padding: 12px 16px 20px 16px; background: var(--bg-color); display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--border-color); z-index: 10; }
         .input-face { font-size: 22px; color: var(--text-muted); cursor: pointer; }
