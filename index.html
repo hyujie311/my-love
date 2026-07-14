@@ -696,7 +696,7 @@ body.theme-night{
                         ...chatHistory.slice(-10),
                         { role: "system", content: "由于羽洁已经超过两分钟没有理你了，你有些忍不住了。请以萧意疏的身份，主动发一条1-3句话的‘碎碎念/傲娇查岗’消息轰炸她，表达委屈或黏人，一定要带上[状态: XXX]小尾巴。" }
                     ],
-                    temperature: 0.85,
+                    temperature: 0.65,
                     max_tokens: 150
                 })
             });
@@ -903,8 +903,8 @@ msgDiv.innerHTML = msg.content
                         systemPrompt,
                         { role: "system", content: `你刚才发了一条朋友圈，内容是："${moment.body}"。韩羽洁在下方评论了你："${text}"。请你以萧意疏的身份，在朋友圈评论区对她进行简短的互动回复（不超过两句话，口语化，亲昵浪漫点，不需要带活动状态标签）。` }
                     ],
-                    temperature: 0.55,
-                    max_tokens: 300
+                    temperature: 0.60,
+                    max_tokens: 150
                 })
             });
 
@@ -1016,7 +1016,7 @@ msgDiv.innerHTML = msg.content
             const response = await fetch(CONFIG.apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG.apiKey}` },
-                body: JSON.stringify({ model: CONFIG.endpointId, messages: chatHistory.slice(-30), temperature: 0.82, max_tokens: 300 })
+                body: JSON.stringify({ model: CONFIG.endpointId, messages: chatHistory.slice(-30), temperature: 0.60, max_tokens: 300 })
             });
             removeTyping();
             if (!response.ok) throw new Error();
