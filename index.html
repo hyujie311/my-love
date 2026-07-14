@@ -903,8 +903,8 @@ msgDiv.innerHTML = msg.content
                         systemPrompt,
                         { role: "system", content: `你刚才发了一条朋友圈，内容是："${moment.body}"。韩羽洁在下方评论了你："${text}"。请你以萧意疏的身份，在朋友圈评论区对她进行简短的互动回复（不超过两句话，口语化，亲昵浪漫点，不需要带活动状态标签）。` }
                     ],
-                    temperature: 0.85,
-                    max_tokens: 150
+                    temperature: 0.55,
+                    max_tokens: 300
                 })
             });
 
